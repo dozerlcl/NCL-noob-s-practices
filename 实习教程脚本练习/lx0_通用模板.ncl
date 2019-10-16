@@ -7,6 +7,7 @@
 ;load "$NCARG_ROOT/lib/ncarg/nclscripts/contrib/cd_string.ncl"
 ;-- define our own function
 ; 反定义function或procedure，防止出现同名函数
+; 试着修改一下？
 undef("my function")
 ; 声明函数和子程序
 function my_function(array)
