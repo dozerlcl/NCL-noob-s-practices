@@ -1,30 +1,116 @@
+;画cnmap地形图
+;参考气象家园中“正确绘制中国地图”帖文
+;http://bbs.06climate.com/forum.php?mod=viewthread&tid=45252
 begin
 ;D:\DATAFILE\NCLDATA\data
-  f=addfile("D:\DATAFILE\NCLDATA\data","r")
+  f=addfile("./practice/lx1_data/hgt.sfc.nc","r")
   var = short2flt( f->hgt(0,:,:))
   
-  wks = gsn_open_wks("eps","contourmap")     
-  gsn_define_colormap(wks,"GMT_gray")
+  wks = gsn_open_wks("png","contourmap")     
+  gsn_define_colormap(wks,"MPL_Dark2")
    
   res                 = True                   
   res@gsnLeftString   = "height"                   
   res@gsnRightString  = "m"                 
-  res@gsnCenterString = "Terrian"
-  res@gsnCenterStringFontHeightF = 0.05  
+  res@gsnCenterString = "Terrian over part China Map with SCS"
+  res@gsnCenterStringFontHeightF = 0.02  
   
   res@pmTickMarkDisplayMode = "Always"
   
-  ;; ���Ƶĵ�ͼ����
-  res@mpMinLatF    = 10          
-  res@mpMaxLatF    = 80
-  res@mpMinLonF    = 30
-  res@mpMaxLonF    = 130
+  ;; 绘制的地图区域
+  res@mpMinLatF                  = 0.                         
+  res@mpMaxLatF                  = 55.
+  res@mpMinLonF                  = 72.
+  res@mpMaxLonF                  = 136.
+   
   
   res@mpFillOn               = False         
   res@mpGridSpacingF         = 10.     ;
 
   res@cnFillOn      = True                  
-  res@cnLinesOn     = False                 
-  
-  plot = gsn_csm_contour_map(wks,var,res)
+  res@cnLinesOn     = True   
+  ; 下面是拼接的脚本     
+  ; 正确中国地图的绘制 Thank Dr. Yongjie Huang (IAP/CAS) for providing map database 
+  res@mpDataSetName              = "./NCL-Chinamap-master/database/Earth..4"
+  res@mpDataBaseVersion          = "MediumRes" ; or "Ncarg4_1"
+  res@mpAreaMaskingOn            = True
+  res@mpMaskAreaSpecifiers       = (/"China"/)
+  res@mpOutlineSpecifiers        = (/"China","China:Provinces"/)     
+
+  res@mpLandFillColor            = "white"
+  res@mpInlandWaterFillColor     = "white"
+  res@mpOceanFillColor           = "white"
+  res@mpFillBoundarySets         = "NoBoundaries"
+  res@mpOutlineBoundarySets      = "NoBoundaries"
+  res@mpNationalLineColor        = "black"
+  res@mpProvincialLineColor      = "black"
+  res@mpGeophysicalLineColor     = "black"
+  res@mpNationalLineThicknessF   = 2
+  res@mpProvincialLineThicknessF = 1    
+;---------------------------------------------------------------
+; plot one part of China map with South China Sea subplot
+  res@mpMinLatF                  = 17.
+  ; res@gsnLeftString              = "Surface pressure over part China Map with SCS"
+  ; 先绘制变量var的map1
+  map1 = gsn_csm_contour_map(wks, var, res) 
+
+;--- add South China Sea --- 
+  nhres                          = True
+  nhres@gsnFrame                 = False
+  nhres@gsnDraw                  = False
+      
+  nhres@vpHeightF                = 0.18    
+  nhres@vpWidthF                 = 0.18
+    
+  nhres@mpMinLatF                =   2.0    
+  nhres@mpMaxLatF                =  23.0
+  nhres@mpMinLonF                = 105.0
+  nhres@mpMaxLonF                = 123.0
+
+  getvalues map1
+    "mpDataSetName"              : nhres@mpDataSetName
+    "mpDataBaseVersion"          : nhres@mpDataBaseVersion
+    "mpFillOn"                   : nhres@mpFillOn
+    "mpFillDrawOrder"            : nhres@mpFillDrawOrder
+    "mpAreaMaskingOn"            : nhres@mpAreaMaskingOn
+    "mpMaskAreaSpecifiers"       : nhres@mpMaskAreaSpecifiers 
+    "mpOutlineSpecifiers"        : nhres@mpOutlineSpecifiers
+    "mpOutlineBoundarySets"      : nhres@mpOutlineBoundarySets
+    "mpLandFillColor"            : nhres@mpLandFillColor       
+    "mpOceanFillColor"           : nhres@mpOceanFillColor      
+    "mpInlandWaterFillColor"     : nhres@mpInlandWaterFillColor
+    "mpNationalLineColor"        : nhres@mpNationalLineColor   
+    "mpProvincialLineColor"      : nhres@mpProvincialLineColor 
+  end getvalues
+
+  getvalues map1@contour
+    "cnFillOn"                   : nhres@cnFillOn
+    "cnLevelSelectionMode"       : nhres@cnLevelSelectionMode
+    "cnLevels"                   : nhres@cnLevels
+    "cnFillColors"               : nhres@cnFillColors
+    "cnFillDrawOrder"            : nhres@cnFillDrawOrder
+    "cnLinesOn"                  : nhres@cnLinesOn
+    "cnLineLabelsOn"             : nhres@cnLineLabelsOn
+  end getvalues
+
+  nhres@lbLabelBarOn             = False
+  nhres@tmXBOn                   = False 
+  nhres@tmYLOn                   = False
+  nhres@tmYROn                   = False
+  nhres@tmXTOn                   = False
+  nhres@gsnLeftString            = ""
+  nhres@gsnRightString           = ""
+
+  map_nanhai = gsn_csm_contour_map(wks,var,nhres)
+; 在map_nanhai中添加变量var的绘制
+  adres                          = True
+  adres@amParallelPosF           = 0.495 ; -0.5 is the left edge of the plot.
+  adres@amOrthogonalPosF         = 0.49  ; -0.5 is the top edge of the plot.
+  adres@amJust                   = "BottomRight"
+
+  plotnh = gsn_add_annotation(map1,map_nanhai,adres)
+  draw(map1)
+  frame(wks)
+
+
 end
