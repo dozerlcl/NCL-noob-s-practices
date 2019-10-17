@@ -6,11 +6,13 @@ begin
   f=addfile("./practice/lx1_data/hgt.sfc.nc","r")
   var = short2flt( f->hgt(0,:,:))
   
-  wks = gsn_open_wks("png","contourmap")     
-  gsn_define_colormap(wks,"MPL_Dark2")
+  wks = gsn_open_wks("x11","contourmap")     
+  gsn_define_colormap(wks,"GMT_gray")
    
-  res                 = True                   
-  res@gsnLeftString   = "height"                   
+  res                 = True  
+  res@gsnFrame    = False
+  res@gsnDraw     = False     ; don't draw plot yet， 避免plot = 之后再draw，画两张图；有叠加的时候使用        
+  res@gsnLeftString   = "height"                  
   res@gsnRightString  = "m"                 
   res@gsnCenterString = "Terrian over part China Map with SCS"
   res@gsnCenterStringFontHeightF = 0.02  
@@ -24,11 +26,19 @@ begin
   res@mpMaxLonF                  = 136.
    
   
-  res@mpFillOn               = False         
+  res@mpFillOn               = False
+  res@mpGridAndLimbOn        = True
+  res@mpGridLineThicknessF   = 0.5
+  res@mpGridLineDashPattern  = 2 ;grid线型         
   res@mpGridSpacingF         = 10.     ;
 
   res@cnFillOn      = True                  
   res@cnLinesOn     = True   
+
+  res@cnLevelSelectionMode = "ExplicitLevels"
+  res@cnLevels             = ispan(1500,4500,1000);(/1500,2500,3500,4500/)
+  ;等差数列，也可以用"cnlevelselectionmode" = "mannuallevels"的形式，如同lx1_contour里面的处理
+  res@cnFillColors         = (/-1,10,8,6,4/)
   ; 下面是拼接的脚本     
   ; 正确中国地图的绘制 Thank Dr. Yongjie Huang (IAP/CAS) for providing map database 
   res@mpDataSetName              = "./NCL-Chinamap-master/database/Earth..4"
@@ -52,7 +62,7 @@ begin
   res@mpMinLatF                  = 17.
   ; res@gsnLeftString              = "Surface pressure over part China Map with SCS"
   ; 先绘制变量var的map1
-  map1 = gsn_csm_contour_map(wks, var, res) 
+  map1 = gsn_csm_contour_map(wks, var, res) ;输出第一次map1，保存在001.里面
 
 ;--- add South China Sea --- 
   nhres                          = True
