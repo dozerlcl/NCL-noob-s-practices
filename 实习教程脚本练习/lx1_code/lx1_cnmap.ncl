@@ -59,10 +59,10 @@ begin
   res@mpProvincialLineThicknessF = 1    
 ;---------------------------------------------------------------
 ; plot one part of China map with South China Sea subplot
-  res@mpMinLatF                  = 17.
+  res@mpMinLatF                  = 5.
   ; res@gsnLeftString              = "Surface pressure over part China Map with SCS"
   ; 先绘制变量var的map1
-  map1 = gsn_csm_contour_map(wks, var, res) ;输出第一次map1，保存在001.里面
+  map1 = gsn_csm_contour_map(wks, var, res) ;输出第一次map1，保存在001.里面,此前设置了res@gsdraw就不绘制
 
 ;--- add South China Sea --- 
   nhres                          = True
@@ -76,7 +76,7 @@ begin
   nhres@mpMaxLatF                =  23.0
   nhres@mpMinLonF                = 105.0
   nhres@mpMaxLonF                = 123.0
-
+  ;将map1中的res的设置转存到nhres中
   getvalues map1
     "mpDataSetName"              : nhres@mpDataSetName
     "mpDataBaseVersion"          : nhres@mpDataBaseVersion
@@ -111,14 +111,15 @@ begin
   nhres@gsnLeftString            = ""
   nhres@gsnRightString           = ""
 
-  map_nanhai = gsn_csm_contour_map(wks,var,nhres)
-; 在map_nanhai中添加变量var的绘制
+  map_nanhai = gsn_csm_contour_map(wks,var,nhres); 在map_nanhai中绘制var
+  ;adres描述在map1中添加map_nanhai
   adres                          = True
   adres@amParallelPosF           = 0.495 ; -0.5 is the left edge of the plot.
   adres@amOrthogonalPosF         = 0.49  ; -0.5 is the top edge of the plot.
   adres@amJust                   = "BottomRight"
 
   plotnh = gsn_add_annotation(map1,map_nanhai,adres)
+  ;最后一次性画出
   draw(map1)
   frame(wks)
 
