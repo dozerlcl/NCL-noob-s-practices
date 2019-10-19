@@ -10,10 +10,10 @@ it_e=201411  ;结束年月
 
 refmag = 3   ;参考箭头所表示的风速大小
 
-;;;read data ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;; 
+;;;read data ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;; 
    ;;  sst
    ;从所给路径打开文件对象
-f_sst = addfile("./practice/lx4_data/sst-197901-201501.nc", "r")
+  f_sst = addfile("./practice/lx4_data/sst-197901-201501.nc", "r")
   time   = f_sst->time              ; 读取其日期
   YYYYMM = cd_calendar(time, -1); 转换成公历日期
   ;printVarSummary(time)            ; 查看下是如何进行转换的（从一个数转成年月 
@@ -41,8 +41,8 @@ f_sst = addfile("./practice/lx4_data/sst-197901-201501.nc", "r")
    f_air2m = addfile("./practice/lx4_data/air2m-197901-201412.nc", "r")
    air2m   = short2flt(f_air2m->air(rec_s:rec_e,0,{-90:90},:))  ; T at 2m    
 
-;;;DJF 平均 & 异常 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;; 
-  sst_DJF = month_to_season(sst,"JFM");JFM季节平均，实际是12/1/2月三个月平均，因为从1979年12月开始截取
+;;;DJF 平均 & 异常 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;; 
+  sst_DJF = month_to_season(sst,"JFM");JFM(1,2,3月)平均，实际是12/1/2月三个月平均，因为从1979年12月开始截取
   copy_VarMeta(sst(0,:,:),sst_DJF(0,:,:));将所有属性， 命名尺寸 和 坐标变量 从一个变量复制到另一个
   sst_DJF!0 = "year";创建命名维度year(原本是time)
   sst_DJF&year=year ;将命名维度设置为year
@@ -77,19 +77,19 @@ f_sst = addfile("./practice/lx4_data/sst-197901-201501.nc", "r")
     
   air2m_ano = dim_rmvmean_n_Wrap(air2m_DJF,0)
     
-;;;(3) enso index (5N-5S, 170-120W);;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;; 
+;;;(3) enso index (5N-5S, 170-120W);;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;; 
   ;计算en地区的区域平均（设置维度
   ensoi = wgt_areaave_Wrap(sst_DJF(:,{-5:5},{190:240}), 1., 1., 0); 0表示仅用非缺省的数值进行计算 
   ;计算结果标准化
   ensoi = dim_standardize_Wrap(ensoi, 1) ;1 表示标准化时除以的是[N] ; 而0表示除以[N-1]
   
-;   ;; 输出至netcdf文件
-;   path_out = "ENSO-index.nc"
-;   system("rm -f "+ path_out)      ; 若当前路径下有同名文件，则删除
-;   ncdf = addfile(path_out,"c")    ; "c" 表示创建 netCDF 文件
-;   ncdf->ensoi = ensoi
+  ;   ;; 输出至netcdf文件
+  ;   path_out = "ENSO-index.nc"
+  ;   system("rm -f "+ path_out)      ; 若当前路径下有同名文件，则删除
+  ;   ncdf = addfile(path_out,"c")    ; "c" 表示创建 netCDF 文件
+  ;   ncdf->ensoi = ensoi
   
-; ;;;(4) composite ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;(4) composite ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   irec_positive = ind(ensoi.gt.0.8)   ;找到ensoi较大的值的位置
   nnumb = dimsizes(irec_positive)     ;其实只有7个时次
   ;printVarSummary(nnumb)
@@ -104,14 +104,14 @@ f_sst = addfile("./practice/lx4_data/sst-197901-201501.nc", "r")
   ;printVarSummary(sst_comp)
   ;printVarSummary(sst_ano)
 
-;;; (5) t-test ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;(5) t-test ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   ;; sst
   sst_std = dim_variance_n_Wrap(sst_ano(irec_positive,:,:),0)
   sst_std = sqrt(sst_std/nnumb)
-  sst_std = where(sst_std.eq.0,sst_std@_FillValue,sst_std)
-  t_sst   = sst_comp/sst_std       
-  confi_sst = sst_comp
-  confi_sst = student_t(t_sst, nnumb-1)   
+  sst_std = where(sst_std.eq.0,sst_std@_FillValue,sst_std) ; where(条件，条件为真的值，条件为假的值)
+  t_sst   = sst_comp/sst_std 
+  confi_sst = sst_comp ; 与sst_comp相同的meta data
+  confi_sst = student_t(t_sst, nnumb-1) ;对t_sst做t检验，自由度为nnumb-1
   ;printVarSummary((confi_sst))
   ;; h300
   h300_std = dim_variance_n_Wrap(h300_ano(irec_positive,:,:),0)
@@ -127,14 +127,15 @@ f_sst = addfile("./practice/lx4_data/sst-197901-201501.nc", "r")
   confi_air2m = air2m_comp
   confi_air2m = student_t(t_air2m, nnumb-1) 
     
-;;; (5) plot
-  wks = gsn_open_wks("png","plot-comp-enso")
+;;;(5) plot
+  wks = gsn_open_wks("x11","plot-comp-enso")
   gsn_define_colormap(wks,"rainbow+gray")  ; 调用rainbow+gray色板
+
 ;其它色板名称请查阅http://www.ncl.ucar.edu/Document/Graphics/color_table_gallery.shtml
-  
   base = new(3,"graphic")
   plot = new(3,"graphic")  
-  ; 每个子图均需该res,res绘制base
+
+;res设置   绘制base中的confi_填色的阴影部分
   res                   = True   ; 调整地图及显著性等值线,
   res@gsnAddCyclic      = True   ; 添加循环点，否则会在0度经线左侧出现一根白条
   res@gsnDraw           = False        
@@ -171,7 +172,8 @@ f_sst = addfile("./practice/lx4_data/sst-197901-201501.nc", "r")
 
   res@cnInfoLabelOn         = False       ; 关闭图右下方的等值线信息标签
   res@lbLabelBarOn          = False       ; 关闭labelbar
- 
+
+;resc设置:绘制plot中的_comp红蓝白等值线部分
   resc@cnLevelSelectionMode  = "ExplicitLevels"                ; 指定每根需绘制的等值线
   resc@cnLevels              = (/-0.75,-0.25,0.25,0.75,1.25/)  ;   
   resc@cnFillOn              = False     ; 关闭等值线填色 
@@ -179,9 +181,10 @@ f_sst = addfile("./practice/lx4_data/sst-197901-201501.nc", "r")
   resc@gsnContourZeroLineThicknessF = 0. ; 设置0值线粗细。0则不画
   resc@cnLineLabelsOn        = False     ; 关闭标签
   resc@cnLineDashPattern     = 16        ; 线型为16的虚线
-  resc@cnInfoLabelOn         = True      ; 打开图右下方的等值线信息标签
+  resc@cnInfoLabelOn         = False      ; 关闭图右下方的等值线信息标签
   resc@cnInfoLabelOrthogonalPosF = 0.05  ; 移动等值线信息标签的位置
 
+;resv设置：绘制u，v风速矢量部分
   resv@vcPositionMode            = "ArrowTail"  ;箭头尾部对应着格点的位置
   resv@vcGlyphStyle              = "Fillarrow"  ;其余三种选项为“LineArrow”、“WindBarb” 、“CurlyVector”
   resv@vcFillArrowEdgeThicknessF = 2         ; 箭头边界粗细
@@ -199,7 +202,7 @@ f_sst = addfile("./practice/lx4_data/sst-197901-201501.nc", "r")
   resv@vcFillArrowHeadMinFracXF =1.0  
   resv@vcFillArrowHeadMinFracYF =1.0 
   
-    ;****设定参考箭头****
+   ;****设定参考箭头****
     resv@vcRefAnnoOn               = True  
     resv@vcRefMagnitudeF           = refmag  ;标准长度箭头所表示的大小
     resv@vcRefLengthF              = 0.045   ;标准长度箭头在单位平方中的大小
@@ -215,18 +218,18 @@ f_sst = addfile("./practice/lx4_data/sst-197901-201501.nc", "r")
     resv@vcRefAnnoSide            = "Top" ; 参考箭头放至图形上方
     resv@vcRefAnnoOrthogonalPosF  = -0.12 ; 调整其位置
     resv@vcRefAnnoParallelPosF    = 0.95 
-    
 
+; base(0),plot(0): confi_sst sst_comp
   res@gsnCenterString            = "sst" ;子图的主标题 
   res@gsnCenterStringFontHeightF = 0.03 
-;标题字体的大小。由于后面没有修改该值，则每幅图的主标题字体均是此大小
+  ;标题字体的大小。由于后面没有修改该值，则每幅图的主标题字体均是此大小
   base(0) = gsn_csm_contour_map(wks, confi_sst, res)  ; 只有底图可有地图（map）  
-  plot(0) = gsn_csm_contour(wks, sst_comp, resc)     ; 调用的绘图函数不可带“map”
+  plot(0) = gsn_csm_contour(wks, sst_comp, resc)      ; 调用的绘图函数不可带“map”
   plot(0) = ColorNegDashZeroPosContour(plot(0),"blue","white","red")
- ;负值用蓝色虚线表示，0线用白色实线，正值红色实线
+  ;负值用蓝色虚线表示，0线用白色实线，正值红色实线
   overlay(base(0), plot(0))     ; 带地图的图必须放在最下图层
 
-  ; 绘制多边形及折线以标明nino 3.4区 
+; glres,gres设置：绘制多边形及折线以标明nino 3.4区 添加在base(0)上
   plres                  = True
   plres@gsLineColor      = "black"
   plres@gsLineThicknessF = 1.0
@@ -237,21 +240,23 @@ f_sst = addfile("./practice/lx4_data/sst-197901-201501.nc", "r")
   gres@gsLineColor       = "black"
    
   latx = (/-5,    5,  5, -5, -5/)    ; nino3.4区的坐标位置
-  lonx = (/190, 190,240, 240, 190/)  ;
-  dum1 = gsn_add_polyline(wks, base(0),lonx,latx,plres)   
+  lonx = (/190, 190, 240, 240, 190/)  ;
+  dum1 = gsn_add_polyline(wks,base(0),lonx,latx,plres)   
   dum2 = gsn_add_polygon(wks,base(0),lonx,latx,gres)
-  
+
+; base(1),plot(1)+plotv：base(1)绘制confi_h300，plot(1)绘制h300_comp，plotv绘制风向uv
   res@gsnCenterString = "h300&V850"  
   resc@cnLevelSelectionMode  = "AutomaticLevels" 
   resc@cnLevelSpacingF = 15.
   base(1) = gsn_csm_contour_map(wks,confi_h300,res)  
-  plot(1) = gsn_csm_contour(wks,h300_comp,resc) 
+  plot(1) = gsn_csm_contour(wks,h300_comp,resc) ;风速大小的等值线图，下面进行调整
   plot(1) = ColorNegDashZeroPosContour(plot(1),"blue","white","red")
   overlay(base(1),plot(1))
   
-  plotv   = gsn_csm_vector(wks,u850_comp,v850_comp,resv) 
+  plotv   = gsn_csm_vector(wks,u850_comp,v850_comp,resv) ;风向的绘制
   overlay(base(1),plotv)  ; 也可用gsn_csm_vector_map(wks,h300_comp,u850,v850,res_new)
 
+; base(2),plot(2):base(2)绘制confi_air2m,plot(2)绘制air2m_comp
   res@gsnCenterString       = "air2m"  
   resc@cnLevelSelectionMode = "ManualLevels" 
   resc@cnMaxLevelValF       = 2
@@ -261,7 +266,8 @@ f_sst = addfile("./practice/lx4_data/sst-197901-201501.nc", "r")
   plot(2) = gsn_csm_contour(wks,air2m_comp,resc) 
   plot(2) = ColorNegDashZeroPosContour(plot(2),"blue","black","red")
   overlay(base(2),plot(2))  
-  
+
+; resP最后出panel图设置
   resP = True                        ; 绘制panel图
   resP@txString       = "El nino"    ; 添加主标题
   resP@txFontHeightF  = 0.03         ; 修改其大小  
@@ -271,5 +277,6 @@ f_sst = addfile("./practice/lx4_data/sst-197901-201501.nc", "r")
   resP@amJust = "TopLeft"                         ;摆放的位置，默认是“BottomRight”
   
   resP@gsnPanelRowSpec = True        ; 指定每行绘制的子图的个数
-  gsn_panel(wks,base,(/1,1,1/),resP)        ; 第1行绘制1幅，第2行绘制2幅
+  gsn_panel(wks,base,(/1,2/),resP)        ; 第1行绘制1幅，第2行绘制2幅，合成在base中（overlay
+
 end
