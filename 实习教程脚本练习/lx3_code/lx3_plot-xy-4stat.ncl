@@ -6,7 +6,7 @@ begin
   nstat = 160  ; 共160站
     
   ;读取全部数据，注意数据存放的路径，该例中存放在./data 下
-  preci = fbindirread("./practice/lx2_data/preci-160-JJA-30yr.grd", 0, (/ntime, nstat/), "float")
+  preci = fbindirread("./practice/lx3_data/preci-160-JJA-30yr.grd", 0, (/ntime, nstat/), "float")
   
   ;手动添加meta data
   preci!0="year" 

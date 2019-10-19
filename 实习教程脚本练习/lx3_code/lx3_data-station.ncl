@@ -5,9 +5,9 @@ begin
   nyear  = year_e - year_s + 1
   
   ; (1) 读入6/7/8三个月的降水
-  path6 = "./practice/lx2_data/r1606.TXT"
-  path7 = "./practice/lx2_data/r1607.TXT"  
-  path8 = "./practice/lx2_data/r1608.TXT" 
+  path6 = "./practice/lx3_data/r1606.TXT"
+  path7 = "./practice/lx3_data/r1607.TXT"  
+  path8 = "./practice/lx3_data/r1608.TXT" 
   path_out_fb = "./practice/lx2_data/preci-" + nstat + "-JJA-30yr.grd"
   m6 = asciiread(path6, (/nyear, nstat/), "float")
   

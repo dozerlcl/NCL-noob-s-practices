@@ -3,7 +3,7 @@
 ;http://bbs.06climate.com/forum.php?mod=viewthread&tid=45252
 begin
 ;D:\DATAFILE\NCLDATA\data
-  f=addfile("./practice/lx1_data/hgt.sfc.nc","r")
+  f=addfile("./practice/lx2_data/hgt.sfc.nc","r")
   var = short2flt( f->hgt(0,:,:))
   
   wks = gsn_open_wks("x11","contourmap")     

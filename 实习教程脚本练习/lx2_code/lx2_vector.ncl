@@ -1,6 +1,6 @@
 begin
-  fu = addfile("./practice/lx1_data/u850-197901-201412.nc","r")
-  fv = addfile("./practice/lx1_data/v850-197901-201412.nc","r")
+  fu = addfile("./practice/lx2_data/u850-197901-201412.nc","r")
+  fv = addfile("./practice/lx2_data/v850-197901-201412.nc","r")
 
   u = short2flt(fu->uwnd(0,{850},:,:)) ; 仅挑取第0个时次      
   v = short2flt(fv->vwnd(0,{850},:,:))

@@ -1,5 +1,5 @@
 begin
-  f = addfile("./practice/lx1_data/air.mon.mean.nc","r")
+  f = addfile("./practice/lx2_data/air.mon.mean.nc","r")
   var = short2flt(f->air(0,:,:,:)) ;此处仅读取第一个时次的air值
   var_test = short2flt(f->air(:,:,:,:)) ; [time | 753] x [level | 17] x [lat | 73] x [lon | 144]
   printVarSummary(var)
