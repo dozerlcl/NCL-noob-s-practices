@@ -1,0 +1,6 @@
+#  ncdump查询文件
+
+#  运行部分
+ncl ./ncl_test_out01.ncl > ./output_pic_out1/ncl_out01_report
+
+ncl ./ncl_test_out01_DKRZ.ncl > ./output_pic_out1/ncl_out1_DKRZ_report

@@ -1,0 +1,48 @@
+ Copyright (C) 1995-2018 - All Rights Reserved
+ University Corporation for Atmospheric Research
+ NCAR Command Language Version 6.5.0
+ The use of this software is governed by a License Agreement.
+ See http://www.ncl.ucar.edu/ for more details.
+(0)	Function unrot_lon: min/max      -6.8005   36.8944
+(0)	Function unrot_lat: min/max      22.4440   64.0789
+
+Variable: lat2d
+Type: float
+Total Size: 44844 bytes
+            11211 values
+Number of Dimensions: 2
+Dimensions and sizes:	[111] x [101]
+Coordinates: 
+Number Of Attributes: 2
+  _FillValue :	-99999.9
+  units :	degrees_north
+
+Variable: lon2d
+Type: float
+Total Size: 44844 bytes
+            11211 values
+Number of Dimensions: 2
+Dimensions and sizes:	[111] x [101]
+Coordinates: 
+Number Of Attributes: 2
+  _FillValue :	-99999.9
+  units :	degrees_east
+
+Variable: var
+Type: float
+Total Size: 1793760 bytes
+            448440 values
+Number of Dimensions: 4
+Dimensions and sizes:	[time | 1] x [level | 40] x [rlat | 111] x [rlon | 101]
+Coordinates: 
+            time: [356400..356400]
+            rlat: [-24.09..24.31]
+            rlon: [-25.13..18.87]
+Number Of Attributes: 7
+  lon2d :	<ARRAY of 11211 elements>
+  lat2d :	<ARRAY of 11211 elements>
+  standard_name :	air_temperature
+  long_name :	temperature
+  units :	K
+  grid_mapping :	rotated_pole
+  coordinates :	lon lat
