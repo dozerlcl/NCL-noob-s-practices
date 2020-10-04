@@ -1,9 +1,0 @@
-startlat_tot = -35.7001388
-; startlon_tot = -33.313786
-; pollat       = 32.5  ;  选为模式区域中央？
-; pollon       = 272.5 ;  180 + 92.5
-; dlon         = 0.25
-; dlat         = 0.25
-; ie_tot       = 241
-; je_tot       = 121
-; ke_tot       = 40
