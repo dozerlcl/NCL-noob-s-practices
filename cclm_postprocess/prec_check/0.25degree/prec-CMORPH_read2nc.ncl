@@ -18,7 +18,7 @@ netCDF = True ;   switch,是否将CPC资料存放为nc格式数据
 nfil   = dimsizes(fili)  ;   放置CMORPH文件夹中所有的文件名
 filc   = tochar( fili ) 
 if(netCDF) then
-    ncDir  = "/m2data2/yycheng/data_stage/cptp/check_data_obs/CMORPH/200807nc/"     ;   创建在上一级目录中
+    ncDir  = "/m2data2/yycheng/data_stage/cptp/check_data_obs/CMORPH/200807nc/"     ;   创建在上一级目录中，具体自己修改
     ncFil  = fili + ".nc"
 end if
 ;***************************************************************

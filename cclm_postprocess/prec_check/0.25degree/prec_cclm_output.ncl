@@ -1,5 +1,5 @@
   ; 2020.09.26
-  ; 检查降水数据
+  ; 检查降水数据，输出三日降水的总计数据
   ; 2020.09.25
   ; 移动到intel服务器上，并着手检验模式输出
   ; 2020.09.05
@@ -43,7 +43,7 @@ begin
 
 ;;;>>>>>data reader
   file_path = "/m2data2/yycheng/data_stage/cptp/cptp_out/cclm/"
-    file_name = "out02_mergetime.nc"
+    file_name = "out02_mergetime.nc" ; 读取进行合并之后的数据
   f_ordata = addfile(file_path + file_name, "r")
   ; printVarSummary(f_ordata)
   ; pvs(f_ordata)

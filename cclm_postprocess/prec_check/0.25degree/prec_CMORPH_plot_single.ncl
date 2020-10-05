@@ -2,6 +2,8 @@
 ;              简单地调整了绘图参数，让他和之前的native的格点绘制地相似
 ;              简单的绘制，用于后续绘图的参考，以及数据检查
 ;              参考脚本有缺陷，本身只有反演的降水的数据，每日具有3小时的数据。一共0-7，共八个层次的数据
+;  2020.10.05
+;              用于绘制一张CMORPH 3HR 0.25degree 的结果。用于检验
 load "./quantile.ncl"   ;  用于检查的分位数的函数
 begin
 
@@ -19,9 +21,9 @@ nfil  = dimsizes(fili)
 
 ;    print(diri+fili(0)) ; check file path
 ;  读取不同层次的降水数据
-   comb  = fbindirread(diri+fili(21),0, (/nlat,mlon/),"float")
-   cpc   = fbindirread(diri+fili(21),7, (/nlat,mlon/),"float")
-;    print(fili)
+   comb  = fbindirread(diri+fili(19),0, (/nlat,mlon/),"float")
+   cpc   = fbindirread(diri+fili(19),7, (/nlat,mlon/),"float")
+   print(fili(19))
 ;***************************************************************
 ; Add meta data
 ;***************************************************************
