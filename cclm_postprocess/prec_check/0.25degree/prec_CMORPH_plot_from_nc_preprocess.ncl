@@ -52,12 +52,12 @@ begin
     ; end do
 
 ;;;>>> data operator ,sum 
-    set_time_start = cd_inv_calendar(2008, 7, 21, 0, 0, 0, time_obs@units, 0)     
-    set_time_end   = cd_inv_calendar(2008, 7, 22, 0, 0, 0, time_obs@units, 0)
+    set_time_start = cd_inv_calendar(2008, 7, 18, 0, 0, 0, time_obs@units, 0)     
+    set_time_end   = cd_inv_calendar(2008, 7, 21, 0, 0, 0, time_obs@units, 0)
     ; print(set_time_start)
     sum_cclm = dim_sum_n(prec_cclm({set_time_start:set_time_end},:,:),0)
     sum_obs  = dim_sum_n(prec_obs({set_time_start:set_time_end},:,:),0)
-    sum_obs = sum_obs*3 ;   mm/hr => mm (in 3 hr)
+    sum_obs = sum_obs*3 ;   mm/3hr => mm (in 3 hr)
     copy_VarMeta(prec_cclm(0,:,:), sum_cclm) ; 注意拷贝原始数据
     copy_VarMeta(prec_obs(0,:,:), sum_obs)   ; metadata
     sum_obs@units = "mm"

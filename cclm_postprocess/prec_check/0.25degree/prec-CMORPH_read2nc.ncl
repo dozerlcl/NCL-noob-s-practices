@@ -34,8 +34,13 @@ do ind_fili = 0,nfil -1,1
     ;    print(diri+fili(0)) ; check file path
     ;   当日逐三小时的资料，有0-7八个层次
     ;    comb  = fbindirread(diri+fili(21),0, (/nlat,mlon/),"float")
-    cpc   = fbindirread(diri+fili(ind_fili),0, (/ntim,nlat,mlon/),"float")
 
+    cpc   = fbindirread(diri+fili(ind_fili),0, (/ntim,nlat,mlon/),"float")
+    cpc_reunittime = new((/ntim, nlat, mlon/), float)
+    do i = 0,ntim-1
+    cpc_reunittime(i,:,:) = fbindirread(diri+fili(ind_fili),i, (/nlat,mlon/),"float")
+    end do
+    print("按照rec顺序和直接将ntim写进fbindirread的顺序读入之间的差别: "+sum(cpc_reunittime - cpc))
     ;***************************************************************
     ; Add meta data
     ;***************************************************************
