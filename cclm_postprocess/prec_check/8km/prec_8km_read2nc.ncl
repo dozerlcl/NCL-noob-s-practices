@@ -74,7 +74,7 @@
   load "../0.25degree/quantile.ncl"
 
   diri  = "/m2data2/yycheng/data_stage/cptp/check_data_obs/CMORPH/200807_8km/"
-  fili  = "CMORPH_V1.0_ADJ_8km-30min_2008072010"                   ; direct access (flat)
+  fili  = "CMORPH_V1.0_ADJ_8km-30min_2008072315"                   ; direct access (flat)
   pthi  = diri+fili
 
 ;;setfileoption("bin","ReadByteOrder","BigEndian")        ; *not* needed; input are type byte
@@ -111,9 +111,9 @@
 
 ;---- Read 'top-half' of the hour (00-29 minus after the hour)
 ;     This is the 1st record (recnum=0)
-
-  prc_u = fbindirread(pthi,0,(/ntim,nlat,nlon/),"ubyte")
-  prc_u1 = fbindirread(pthi,1,(/ntim,nlat,nlon/),"ubyte")
+  setfileoption("bin","ReadByteOrder","BigEndian")
+  prc_u = chartofloat(fbindirread(pthi,3,(/nlat,nlon/),"character"))
+  prc_u1 = fbindirread(pthi,3,(/nlat,nlon/),"ubyte")
   prc_u@_FillValue = toubyte(255)
   printMinMax(prc_u,0)
 
@@ -123,16 +123,16 @@
 
   prc@long_name = "CMORPH 8km"
   prc@units     = "mm/hr"
-  prc!0         = "time"
-  prc!1         = "lat"
-  prc!2         = "lon"
-  prc&time      =  time
+  ; prc!0         = "time"
+  prc!0         = "lat"
+  prc!1         = "lon"
+  ; prc&time      =  time
   prc&lat       =  lat
   prc&lon       =  lon
   printVarSummary(prc)
   printMinMax(prc,0)
-;   print(percent_to_value(prc,ispan(0, 100, 1)))
-;   print(get_unique_values(prc))
+  print(percent_to_value(prc,ispan(0, 100, 1)))
+  ; print(get_unique_values(prc))
 
 
 
@@ -140,7 +140,7 @@
   if (PLOT) then
       pltType = "png"                  ; send graphics to PNG file
       pltDir  = "./output_pic/"
-      pltName = "cmorph_8km_check_single"   
+      pltName = "cmorph_8km_check_single_rec3"   
 
       wks    = gsn_open_wks(pltType, pltDir+pltName)
   
@@ -149,8 +149,8 @@
     
       res@cnFillOn             = True     ; turn on color fill
       res@cnLinesOn            = False    ; turn of contour lines
-     ;res@cnFillMode           = "CellFill"           ; Cell Mode
-      res@cnFillMode           = "RasterFill"         ; Raster Mode
+     res@cnFillMode           = "CellFill"           ; Cell Mode
+      ; res@cnFillMode           = "RasterFill"         ; Raster Mode
       res@cnLinesOn            =  False       ; Turn off contour lines
       res@cnLineLabelsOn       =  False       ; Turn off contour lines
 
@@ -190,6 +190,6 @@
   
       nt   = 0
       ; res@tiMainString = fili
-      plot = gsn_csm_contour_map(wks,prc(nt,:,:), res)
+      plot = gsn_csm_contour_map(wks,prc(:,:), res)
   end if    ; PLOT
  

@@ -110,7 +110,7 @@
 ;---- Read 'top-half' of the hour (00-29 minus after the hour)
 ;     This is the 1st record (recnum=0)
 
-  prc_u = fbindirread(pthi,4,(/ntim,nlat,nlon/),"ubyte")
+  prc_u = fbindirread(pthi,3,(/ntim,nlat,nlon/),"ubyte")
   prc_u@_FillValue = toubyte(255)
   printMinMax(prc_u,0)
 
@@ -146,8 +146,8 @@
     
       res@cnFillOn             = True     ; turn on color fill
       res@cnLinesOn            = False    ; turn of contour lines
-     ;res@cnFillMode           = "CellFill"           ; Cell Mode
-      res@cnFillMode           = "RasterFill"         ; Raster Mode
+     res@cnFillMode           = "CellFill"           ; Cell Mode
+      ; res@cnFillMode           = "RasterFill"         ; Raster Mode
       res@cnLinesOn            =  False       ; Turn off contour lines
       res@cnLineLabelsOn       =  False       ; Turn off contour lines
 
@@ -161,26 +161,26 @@
   
       res@lbLabelBarOn         = False    ; turn off individual cb's
     
-      res@mpMinLatF            = -60.     ; CMORPH limits [approx]
-      res@mpMaxLatF            =  60.
-      res@mpCenterLonF         = 210.
-      res@mpFillOn             = False
-      ; limit area
+      ; res@mpMinLatF            = -60.     ; CMORPH limits [approx]
+      ; res@mpMaxLatF            =  60.
+      ; res@mpCenterLonF         = 210.
+      ; res@mpFillOn             = False
+      ; ; limit area
       res@mpLimitMode            = "Corners"
       res@mpLeftCornerLatF       = 15.99613   
       res@mpLeftCornerLonF       = 66.63403
       res@mpRightCornerLatF      = 44.66093
       res@mpRightCornerLonF      = 118.7213
 
-      res@tiMainString           = "Native projection"
-      res@pmTickMarkDisplayMode  = "always"
+      ; res@tiMainString           = "Native projection"
+      ; res@pmTickMarkDisplayMode  = "always"
 
-      pole_lat = 57.
-      pole_lon = -91.5
-      res@mpCenterLatF           = 90 - pole_lat  ; north_pole_lat=6.55
-      res@mpCenterLonF           = 180 + pole_lon ; north_pole_lon=0
+      ; pole_lat = 57.
+      ; pole_lon = -91.5
+      ; res@mpCenterLatF           = 90 - pole_lat  ; north_pole_lat=6.55
+      ; res@mpCenterLonF           = 180 + pole_lon ; north_pole_lon=0
 
-      res@tiMainString           = "Native rotated lat/lon Projection"
+      ; res@tiMainString           = "Native rotated lat/lon Projection"
       ;res@mpShapeMode          = "FreeAspect"
       ;res@vpWidthF             = 0.8
       ;res@vpHeightF            = 0.4

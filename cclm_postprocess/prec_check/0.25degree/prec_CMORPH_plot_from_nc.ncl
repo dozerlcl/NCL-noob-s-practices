@@ -5,8 +5,10 @@
 begin
 
 ;;;>>>>> read data
+    start_day  = 19
+    end_day    = 24
     file_path = "/m2data2/yycheng/data_stage/cptp/postprocess_data/prec_check_temporary/"
-    file_name = "prec_sum_0718_0723"+".nc"
+    file_name = "prec_sum_07"+start_day+"_07"+end_day+".nc"
     f_or = addfile(file_path + file_name, "r")
     prec_obs_sum  = f_or->$"sum_obs"$
     prec_cclm_sum = f_or->$"sum_cclm"$
@@ -25,11 +27,12 @@ begin
 
 ;;;>>>>>error data combine
     ; printVarSummary(prec_obs_sum)
-    prec_cclm_sum = where(prec_cclm_sum.gt.400., 400, prec_cclm_sum)
+    ; prec_cclm_sum = where(prec_cclm_sum.gt.400., 400, prec_cclm_sum)
     ; prec_obs_sum = where(prec_obs_sum.gt.350., 350, prec_obs_sum)
+    ; printVarSummary(prec_obs_sum)
         
 
-wks  = gsn_open_wks("png", "./output_pic/totprec_out02_from_nc")     ; send graphics to PNG file
+wks  = gsn_open_wks("png", "./output_pic/totprec_from_nc")     ; send graphics to PNG file
     plot = new ( 2 , "graphic")
     res                        = True             ; plot mods desired
     res@lbLabelBarOn           = False            ; turn off individual cb's
