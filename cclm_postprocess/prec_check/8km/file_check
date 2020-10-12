@@ -1,0 +1,202 @@
+
+
+Variable: ymdh
+Type: integer
+Total Size: 4 bytes
+            1 values
+Number of Dimensions: 1
+Dimensions and sizes:	[1]
+Coordinates: 
+(0)	2008072315
+(0)	record number is :0
+(0)	min=0   max=252
+
+
+Variable: unnamed (return)
+Type: float
+Total Size: 44 bytes
+            11 values
+Number of Dimensions: 1
+Dimensions and sizes:	[11]
+Coordinates: 
+Number Of Attributes: 1
+  _FillValue :	1e+20
+(0)	 0
+(1)	 0
+(2)	 0
+(3)	 0
+(4)	 0
+(5)	25
+(6)	63
+(7)	64
+(8)	147
+(9)	204
+(10)	252
+(0)	record number is :1
+(0)	min=0   max=252
+
+
+Variable: unnamed (return)
+Type: float
+Total Size: 44 bytes
+            11 values
+Number of Dimensions: 1
+Dimensions and sizes:	[11]
+Coordinates: 
+Number Of Attributes: 1
+  _FillValue :	1e+20
+(0)	 0
+(1)	 0
+(2)	 0
+(3)	 0
+(4)	 0
+(5)	62
+(6)	63
+(7)	102
+(8)	154
+(9)	204
+(10)	252
+(0)	record number is :2
+(0)	min=0   max=254
+
+
+Variable: unnamed (return)
+Type: float
+Total Size: 44 bytes
+            11 values
+Number of Dimensions: 1
+Dimensions and sizes:	[11]
+Coordinates: 
+Number Of Attributes: 1
+  _FillValue :	1e+20
+(0)	 0
+(1)	51
+(2)	62
+(3)	63
+(4)	64
+(5)	102
+(6)	153
+(7)	166
+(8)	204
+(9)	205
+(10)	254
+(0)	record number is :3
+(0)	min=0   max=252
+
+
+Variable: unnamed (return)
+Type: float
+Total Size: 44 bytes
+            11 values
+Number of Dimensions: 1
+Dimensions and sizes:	[11]
+Coordinates: 
+Number Of Attributes: 1
+  _FillValue :	1e+20
+(0)	 0
+(1)	 0
+(2)	 0
+(3)	 0
+(4)	 0
+(5)	 6
+(6)	63
+(7)	65
+(8)	153
+(9)	204
+(10)	252
+(0)	record number is :4
+(0)	min=0   max=252
+
+
+Variable: unnamed (return)
+Type: float
+Total Size: 44 bytes
+            11 values
+Number of Dimensions: 1
+Dimensions and sizes:	[11]
+Coordinates: 
+Number Of Attributes: 1
+  _FillValue :	1e+20
+(0)	 0
+(1)	 0
+(2)	 0
+(3)	 0
+(4)	 0
+(5)	32
+(6)	63
+(7)	64
+(8)	153
+(9)	204
+(10)	252
+(0)	record number is :5
+(0)	min=0   max=254
+
+
+Variable: unnamed (return)
+Type: float
+Total Size: 44 bytes
+            11 values
+Number of Dimensions: 1
+Dimensions and sizes:	[11]
+Coordinates: 
+Number Of Attributes: 1
+  _FillValue :	1e+20
+(0)	 0
+(1)	 0
+(2)	 0
+(3)	 0
+(4)	 0
+(5)	62
+(6)	63
+(7)	102
+(8)	154
+(9)	204
+(10)	254
+(0)	record number is :6
+(0)	min=0   max=253
+
+
+Variable: unnamed (return)
+Type: float
+Total Size: 44 bytes
+            11 values
+Number of Dimensions: 1
+Dimensions and sizes:	[11]
+Coordinates: 
+Number Of Attributes: 1
+  _FillValue :	1e+20
+(0)	 0
+(1)	51
+(2)	62
+(3)	63
+(4)	64
+(5)	102
+(6)	153
+(7)	154
+(8)	204
+(9)	205
+(10)	253
+(0)	record number is :7
+(0)	min=0   max=252
+
+
+Variable: unnamed (return)
+Type: float
+Total Size: 44 bytes
+            11 values
+Number of Dimensions: 1
+Dimensions and sizes:	[11]
+Coordinates: 
+Number Of Attributes: 1
+  _FillValue :	1e+20
+(0)	 0
+(1)	 0
+(2)	 0
+(3)	 0
+(4)	 0
+(5)	25
+(6)	63
+(7)	76
+(8)	153
+(9)	204
+(10)	252

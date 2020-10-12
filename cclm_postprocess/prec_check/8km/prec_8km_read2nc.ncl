@@ -1,89 +1,24 @@
-;***************************************************************
-; cmorph_4.ncl
-;
-; Concepts illustrated:
-;   - Reading big endian binary files
-;   - Reading records written by a fortran *direct access* write
-;   - Reading CMORPH 8km data
-;   - Adding meta data (attributes and coordinates [time, lat, lon])
-;   - Explicitly setting contour levels and colors
-;***************************************************************
-;; ftp://ftp.cpc.ncep.noaa.gov/precip/global_CMORPH/README.cmorph.8km_30minute
-;;
-;; Each direct access record is a 4948 x 1649 CHARACTER*1 (use FORTRAN ichar
-;; command to retrieve interger value for all parameters) array with  grid
-;; increments of 0.072756669 degrees of longitude and 0.072771377 of latitude,
-;; which is apporoximately 8 km at the equator.  The arrays are oriented from
-;; North to South, beginning from latitude 59.963614N and from West to EAST from
-;; longitude  0.036378335E.
-;; 
-;; Missing data are denoted by values of 255.
-;; 
-;; Note that the precipitation estimates have been scaled, and when multiplied by
-;; "0.2", the data units are "mm/hour".
-;; 
-;; For GrADS users, a descriptor ("ctl") file: CMORPH_8km-30-minute.ctl has been
-;; provided.  However, since the data are in CHARACTER*1 words (bytes) the parameters
-;; after each variable (-1,40,1,-1 in our example "ctl file") are system dependent.  
-;; Our example is for an SGI system.
-;; 
-;; Each file contains 6 records.  The 1st 3 records pertain to the top half
-;; of the hour (00-29 minus after the hour) and the last 3 records are for the
-;; bottom half of the hour.  Within each group:
-;; 
-;;   -  the 1st record contains the CMORPH precipitation estimates 
-;;   
-;;   -  the 2nd record contains the time (in half hour units) since the most
-;;      recent microwave pass.  Note that since we do both a forward &
-;;        backward interpolation in time, the nearest time may be prior to
-;;        the file time stamp or after it.  
-;;        
-;;   -  the 3rd record contains an ID that tells the satellite from which the last
-;;        microwave observation was made which can be interpretted by the following
-;;        table (as of the time of the last update of this documentation):
-;;        
-;;        13 = DMSP-13 (SSM/I instrument)
-;;        14 = DMSP-14 (  "       "      )
-;;        15 = DMSP-15 (  "       "      )
-;;        16 = DMSP-16 (SSMIS instrument, coming soon)
-;;        17 = DMSP-17 ( " " )
-;;        18 = DMSP-18 ( " " ) 
-;;       115 = NOAA-15 (AMSU-B    "      )
-;;       116 = NOAA-16 (  "       "      )
-;;       117 = NOAA-17 (  "       "      )
-;;       118 = NOAA-18 (MHS )
-;;       119 = NOAA-19 ( " " )
-;;       151 = METOP-A ( " " )
-;;       201 = TRMM    (TMI       "      )
-;;       211 = AQUA    (AMSR-E    "      )
-;;   
-;; 
-;; Each direct access record is a 4948 x 1649 CHARACTER*1 (use FORTRAN ichar
-;; command to retrieve interger value for all parameters) array with  grid
-;; increments of 0.072756669 degrees of longitude and 0.072771377 of latitude,
-;; which is apporoximately 8 km at the equator.  The arrays are oriented from
-;; North to South, beginning from latitude 59.963614N and from West to EAST from
-;; longitude  0.036378335E.
-;; 
-;; Missing data are denoted by values of 255.
-;; 
-;; Note that the precipitation estimates have been scaled, and when multiplied by
-;; "0.2", the data units are "mm/hour".
-;********************************************************************************
-
-  load "../0.25degree/quantile.ncl"
-
+;         10.12   将一个文件夹中的8km的cmorph的文件进行合并，并输出到NC文件中
+;                 仅仅处理一个文件，用以读入数据的验证，附带有简单的绘图部分  
+; load "../0.25degree/quantile.ncl"
+begin
   diri  = "/m2data2/yycheng/data_stage/cptp/check_data_obs/CMORPH/200807_8km/"
   fili  = "CMORPH_V1.0_ADJ_8km-30min_2008072315"                   ; direct access (flat)
   pthi  = diri+fili
 
-;;setfileoption("bin","ReadByteOrder","BigEndian")        ; *not* needed; input are type byte
+        ;  if (isbigendian() ) then
+        ; print(isbigendian()) ; FALSE
+            ;  setfileoption("bin", "RecordMarkerSize", 4)
+        ;  end if
+
+; setfileoption("bin","ReadByteOrder","littleEndian")        ; *not* needed; input are type byte
+setfileoption("bin","RecordMarkerSize",8)
 
   dlim  = "_-"                                            ; string delimiter
   nfld  = str_fields_count(fili, dlim)                    ; nfld=4
   ;;; 使用分隔符读取yyymmddhh，非常实用
   ymdh  = toint(str_get_field(fili, 6, dlim))             ; yyyymmddhh 
-  print(ymdh)
+  ; print(ymdh)
   yyyy  = ymdh/1000000
   mdh   = ymdh - yyyy*1000000
   mm    = mdh/10000
@@ -102,21 +37,24 @@
   lat   = 59.963614d - ispan(0,nlat-1,1)*0.072771377d    ; N->S
   lat!0 = "lat"
   lat@units = "degrees_north"
-  printMinMax(lat,0)
+  ; printMinMax(lat,0)
 
   lon   = 0.036378335d + ispan(0,nlon-1,1)*0.072756669d
   lon!0 = "lon"
   lon@units = "degrees_east"
-  printMinMax(lon,0)
+  ; printMinMax(lon,0)
 
 ;---- Read 'top-half' of the hour (00-29 minus after the hour)
 ;     This is the 1st record (recnum=0)
-  setfileoption("bin","ReadByteOrder","BigEndian")
-  prc_u = chartofloat(fbindirread(pthi,3,(/nlat,nlon/),"character"))
-  prc_u1 = fbindirread(pthi,3,(/nlat,nlon/),"ubyte")
-  prc_u@_FillValue = toubyte(255)
+  ; setfileoption("bin","ReadByteOrder","Little")
+i=1
+  print("record number is :"+ i)
+  ; prc_u = fbindirread(pthi,i,(/nlat,nlon/),"ubyte")
+  prc_u = fbindirread(pthi, i, (/nlat, nlon/), "float")
+  ; prc_u1 = fbindirread(pthi,3,(/ntim,nlat,nlon/),"ubyte")
+  prc_u@_FillValue = -999
   printMinMax(prc_u,0)
-
+  ; drop 0.2
   prc = where(ismissing(prc_u), 1e20, prc_u*0.2)
   prc@_FillValue = 1e20
   delete(prc_u)                        ; no longer needed
@@ -129,14 +67,14 @@
   ; prc&time      =  time
   prc&lat       =  lat
   prc&lon       =  lon
-  printVarSummary(prc)
-  printMinMax(prc,0)
-  print(percent_to_value(prc,ispan(0, 100, 1)))
+  ; printVarSummary(prc)
+  ; printMinMax(prc,0)
+  ; print(percent_to_value(prc,ispan(90, 100, 1)))
   ; print(get_unique_values(prc))
+; end do
 
-
-
-  PLOT = True
+  ; check for plot
+  PLOT = False
   if (PLOT) then
       pltType = "png"                  ; send graphics to PNG file
       pltDir  = "./output_pic/"
@@ -174,6 +112,7 @@
       res@mpLeftCornerLonF       = 66.63403
       res@mpRightCornerLatF      = 44.66093
       res@mpRightCornerLonF      = 118.7213
+      ; res@mpLeftCornerLatF
 
       res@tiMainString           = "Native projection"
       res@pmTickMarkDisplayMode  = "always"
@@ -193,3 +132,4 @@
       plot = gsn_csm_contour_map(wks,prc(:,:), res)
   end if    ; PLOT
  
+ end
