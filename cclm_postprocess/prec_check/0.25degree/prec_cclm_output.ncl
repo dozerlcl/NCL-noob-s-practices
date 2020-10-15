@@ -42,8 +42,8 @@ end
 begin
 
 ;;;>>>>>data reader
-  file_path = "/m2data2/yycheng/data_stage/cptp/cptp_out/cclm/"
-    file_name = "out02_mergetime.nc" ; 读取进行合并之后的数据
+  file_path = "/m2data2/yycheng/data_stage/cptp/cptp_backup/cptp_out_A1_10.13/cclm/"
+    file_name = "out02_merge_10.13.nc" ; 读取进行合并之后的数据
   f_ordata = addfile(file_path + file_name, "r")
   ; printVarSummary(f_ordata)
   ; pvs(f_ordata)
@@ -79,7 +79,7 @@ begin
 ;;;>>>>>start plot
   print("-----start plot-----")
     ;---Start the graphics section
-  wks  = gsn_open_wks("png", "./output_pic/totprec_out02")     ; send graphics to PNG file
+  wks  = gsn_open_wks("png", "./output_pic/totprec_A1")     ; send graphics to PNG file
 
   res                        = True             ; plot mods desired
 

@@ -6,14 +6,14 @@ begin
 
 ;;;>>>>>data reader
 ;;;>>>>>obs data
-    file_path_obs = "/m2data2/yycheng/data_stage/cptp/check_data_obs/CMORPH/"
-    file_name_obs = "200807_mergetime_CMORPH.nc" ; 读取进行合并之后的数据
+    file_path_obs = "/m2data2/yycheng/data_stage/cptp/check_data_obs/CMORPH/200807nc_cdo/"
+    file_name_obs = "200807_25deg_mergetime.nc" ; 读取进行合并之后的数据
     f_obs = addfile(file_path_obs + file_name_obs, "r")
     prec_obs = f_obs->$"CMORPH"$
     ; printVarSummary(prec_ordata)
 ;;;>>>>>cclm data
-    file_path_cclm = "/m2data2/yycheng/data_stage/cptp/cptp_out/cclm/"
-    file_name_cclm = "out02_mergetime.nc" ; 读取进行合并之后的数据
+    file_path_cclm = "/m2data2/yycheng/data_stage/cptp/cptp_backup/cptp_out_A2_10.15/cclm/"
+    file_name_cclm = "out02_merge_10.15.nc" ; 读取进行合并之后的数据
     f_cclm = addfile(file_path_cclm + file_name_cclm, "r")
     prec_cclm = f_cclm->$"TOT_PREC"$
     rlat = f_cclm->$"rlat"$
