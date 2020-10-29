@@ -4,7 +4,7 @@ begin
 
 ;;;>>>>> read data
     file_path = "/m2data2/yycheng/data_stage/cptp/postprocess_data/prec_check_temporary/"
-    file_name = "prec_sum_0718_0723"+".nc"
+    file_name = "prec_sum_0720_0724"+".nc"
     f_or = addfile(file_path + file_name, "r")
     prec_obs_sum  = f_or->$"sum_obs"$
     prec_cclm_sum = f_or->$"sum_cclm"$

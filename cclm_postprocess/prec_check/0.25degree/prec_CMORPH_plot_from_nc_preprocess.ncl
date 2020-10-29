@@ -54,7 +54,7 @@ begin
     ; end do
 
 ;;;>>> data operator ,sum to 24 hr prec
-    start_day  = 19
+    start_day  = 20
     end_day    = 24
     set_time_start = cd_inv_calendar(2008, 7, start_day, 0, 0, 0, time_obs@units, 0)     
     set_time_end   = cd_inv_calendar(2008, 7, end_day  , 0, 0, 0, time_obs@units, 0)
@@ -65,8 +65,8 @@ begin
     sum_obs  = sum_obs*3/(end_day - start_day) ;   mm/3hr => mm/hr (in 3 hr)
     copy_VarMeta(prec_cclm(0,:,:), sum_cclm) ; 注意拷贝原始数据
     copy_VarMeta(prec_obs(0,:,:), sum_obs)   ; metadata
-    sum_obs@units = "mm"
-    sum_cclm@units = "mm"
+    sum_obs@units = "mm/day"
+    sum_cclm@units = "mm/day"
     ;;; check quantile
     ; print(percent_to_value(sum_obs,ispan(90, 100, 1)))
     ; print(percent_to_value(sum_cclm,ispan(90, 100, 1)))
