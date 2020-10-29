@@ -54,7 +54,7 @@ begin
   ; print(set_time_start)
   plotdata_A1 = dim_sum_n(p_ordata_A1({set_time_start:set_time_end},:,:),0)
   plotdata_B1 = dim_sum_n(p_ordata_B1({set_time_start:set_time_end},:,:),0)
-  ; printVarSummary(plotdata)
+  printVarSummary(plotdata_A1)
   ; printMinMax(plotdata, 1)
   ; print(percent_to_value(plotdata,ispan(0, 100, 1)))
   ; plotdata_A1 = where(plotdata_A1.gt.350., 350, plotdata_A1)
@@ -67,9 +67,9 @@ begin
 ;   percent_start = 99.0   
     do i=0.,1.,0.1
         percent = 99.0 + i  
-        nps_A1_precent = percent_to_value(plotdata_A1,percent)
+        nps_A1_precent = percent_to_value(plotdata_B1,percent)
         print(percent + "% point value: "+nps_A1_precent)
-        nps_A1 = where(plotdata_A1.gt.nps_A1_precent,i*10,nps_A1)
+        nps_A1 = where(plotdata_B1.gt.nps_A1_precent,i*10,nps_A1)
     end do
 ;;;>>>>>start plot
 ; PLOT = False
@@ -77,7 +77,7 @@ PLOT = True
 if(PLOT) then
   print("-----start plot-----")
     ;---Start the graphics section
-  wks  = gsn_open_wks("png", "./output_pic/totprec_A1")     ; send graphics to PNG file
+  wks  = gsn_open_wks("png", "./output_pic/totprec_B1")     ; send graphics to PNG file
 
   res                        = True             ; plot mods desired
 
