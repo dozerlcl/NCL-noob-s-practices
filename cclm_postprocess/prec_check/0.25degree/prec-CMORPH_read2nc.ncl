@@ -40,7 +40,7 @@ do ind_fili = 0,nfil -1,1
     do i = 0,ntim-1
     cpc_reunittime(i,:,:) = fbindirread(diri+fili(ind_fili),i, (/nlat,mlon/),"float")
     end do
-    print("按照rec顺序和直接将ntim写进fbindirread的顺序读入之间的差别: "+sum(cpc_reunittime - cpc))
+    ; print("按照rec顺序和直接将ntim写进fbindirread的顺序读入之间的差别: "+sum(cpc_reunittime - cpc))
     ;***************************************************************
     ; Add meta data
     ;***************************************************************
@@ -63,7 +63,7 @@ do ind_fili = 0,nfil -1,1
     ;***************************************************************
     ; Create/Add coordinate variables. See above Grads ctl   
     ;***************************************************************
-    lat       =  59.875 - ispan(0,nlat-1,1)*0.25  
+    lat       =  -59.875 + ispan(0,nlat-1,1)*0.25  
     lon       =   0.125 + ispan(0,mlon-1,1)*0.25 
                                             ;latitude
     lat!0     = "lat"
